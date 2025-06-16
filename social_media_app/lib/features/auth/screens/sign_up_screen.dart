@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/screens/sign_in_screen.dart';
@@ -83,11 +82,6 @@ class SignUpScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // UserModel.setUserModel(
-                        //   _userNameController.value.text,
-                        //   _userEmailController.text,
-                        //   _userPaswordController.text,
-                        // );
                         AuthService().registerUser(email: _userEmailController.text, password: _userPasswordController.text);
                         Navigator.pushReplacement(
                           context,

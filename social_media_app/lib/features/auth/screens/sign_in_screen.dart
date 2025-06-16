@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_app/core/extensions/extensions.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/screens/sign_up_screen.dart';
+import 'package:social_media_app/features/auth/services/auth_service.dart';
+import 'package:social_media_app/features/auth/validation_check.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -31,7 +32,7 @@ class SignInScreen extends StatelessWidget {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 40),
+                SizedBox(height: 120),
                 Text(
                   'Sign In',
                   style: Theme.of(context).textTheme.headlineLarge,
@@ -39,14 +40,7 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   controller: _userEmailController,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'user email is required ..';
-                    } else if (!value.isValidEmail) {
-                      return 'Invalid email !!';
-                    }
-                    return null;
-                  },
+                  validator: (value) => ValidationCheck.checkEmail(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     label: Text('Enter your email'),
@@ -60,8 +54,6 @@ class SignInScreen extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'password is required ..';
-                    } else if (!value.isValidPassword) {
-                      return 'Invalid pasword, should be more than 8 letters, contains upper/lower/special letters';
                     }
                     return null;
                   },
@@ -76,17 +68,8 @@ class SignInScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // UserModel.setUserModel(
-                        //   _userNameController.value.text,
-                        //   _userEmailController.text,
-                        //   _userPaswordController.text,
-                        // );
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => SignInScreen(),
-                        //   ),
-                        // );
+                        AuthService().loginUser(email: _userEmailController.text, password: _userPaswordController.text);
+
                       }
                     },
                     child: Text('sign In'),

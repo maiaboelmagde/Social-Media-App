@@ -20,4 +20,18 @@ class AuthService {
       ToastService.showToast('Registration Failed: ${e.toString()}');
     }
   }
+
+
+  Future<void> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      ToastService.showToast('Sucessful Registration');
+    } catch (e) {
+      ToastService.showToast('Registration Failed: ${e.toString()}');
+    }
+  }
 }
