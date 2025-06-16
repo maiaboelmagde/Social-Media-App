@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/screens/sign_in_screen.dart';
+import 'package:social_media_app/features/auth/services/auth_service.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -9,7 +11,7 @@ class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _userEmailController = TextEditingController();
-  final _userPaswordController = TextEditingController();
+  final _userPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class SignUpScreen extends StatelessWidget {
                 TextFormField(
                   obscureText: true,
 
-                  controller: _userPaswordController,
+                  controller: _userPasswordController,
                   validator: (value) =>ValidationCheck.checkPassword(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.password),
@@ -69,7 +71,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   obscureText: true,
-                  validator: (value) =>ValidationCheck.checkPasswordCofirmation(value, _userPaswordController.text),
+                  validator: (value) =>ValidationCheck.checkPasswordCofirmation(value, _userPasswordController.text),
                   decoration: InputDecoration(
                     icon: Icon(Icons.password),
                     label: Text('Password confirmation ..'),
@@ -79,13 +81,14 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
                         // UserModel.setUserModel(
                         //   _userNameController.value.text,
                         //   _userEmailController.text,
                         //   _userPaswordController.text,
                         // );
+                        AuthService().registerUser(email: _userEmailController.text, password: _userPasswordController.text);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => SignInScreen()),
