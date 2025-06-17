@@ -3,6 +3,7 @@ import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/screens/sign_up_screen.dart';
 import 'package:social_media_app/features/auth/services/auth_service.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
+import 'package:social_media_app/features/home/home_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -36,7 +37,7 @@ class SignInScreen extends StatelessWidget {
                 Text(
                   'Sign In',
                   style: Theme.of(context).textTheme.headlineLarge,
-                ),                
+                ),
                 SizedBox(height: 40),
                 TextFormField(
                   controller: _userEmailController,
@@ -66,10 +67,20 @@ class SignInScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        AuthService().loginUser(email: _userEmailController.text, password: _userPaswordController.text);
-
+                        bool isSuccess = await AuthService().loginUser(
+                          email: _userEmailController.text,
+                          password: _userPaswordController.text,
+                        );
+                        if (isSuccess) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Text('sign In'),
@@ -78,11 +89,19 @@ class SignInScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text("You Don't have an account?"),
-                    TextButton(onPressed: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
-                    }, child: Text('Sign up'))
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignUpScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Sign up'),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),

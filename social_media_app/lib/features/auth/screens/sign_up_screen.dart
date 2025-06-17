@@ -4,12 +4,20 @@ import 'package:social_media_app/features/auth/screens/sign_in_screen.dart';
 import 'package:social_media_app/features/auth/services/auth_service.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _userNameController = TextEditingController();
+
   final _userEmailController = TextEditingController();
+
   final _userPasswordController = TextEditingController();
 
   @override
@@ -41,7 +49,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   controller: _userNameController,
-                  validator: (value) =>ValidationCheck.checkName(value),
+                  validator: (value) => ValidationCheck.checkName(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.text_fields),
                     label: Text('Enter your Name'),
@@ -50,7 +58,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   controller: _userEmailController,
-                  validator: (value) =>ValidationCheck.checkEmail(value),
+                  validator: (value) => ValidationCheck.checkEmail(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     label: Text('Enter your email'),
@@ -61,7 +69,7 @@ class SignUpScreen extends StatelessWidget {
                   obscureText: true,
 
                   controller: _userPasswordController,
-                  validator: (value) =>ValidationCheck.checkPassword(value),
+                  validator: (value) => ValidationCheck.checkPassword(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.password),
                     label: Text('enter password ..'),
@@ -70,7 +78,11 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   obscureText: true,
-                  validator: (value) =>ValidationCheck.checkPasswordCofirmation(value, _userPasswordController.text),
+                  validator: (value) =>
+                      ValidationCheck.checkPasswordCofirmation(
+                        value,
+                        _userPasswordController.text,
+                      ),
                   decoration: InputDecoration(
                     icon: Icon(Icons.password),
                     label: Text('Password confirmation ..'),
@@ -82,11 +94,20 @@ class SignUpScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        AuthService().registerUser(email: _userEmailController.text, password: _userPasswordController.text);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignInScreen()),
+                        bool isSuccess = await AuthService().registerUser(
+                          name: _userNameController.text,
+                          email: _userEmailController.text,
+                          password: _userPasswordController.text,
                         );
+                        if (isSuccess) {
+                          await Future.delayed(Duration(milliseconds: 500));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignInScreen(),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Text('sign up'),
@@ -95,11 +116,14 @@ class SignUpScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text('You already have an account?'),
-                    TextButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, child: Text('Sign in'))
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Sign in'),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
