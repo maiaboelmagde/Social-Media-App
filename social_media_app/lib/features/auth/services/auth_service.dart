@@ -24,6 +24,8 @@ class AuthService {
     
       if (user != null) {
 
+        await user.sendEmailVerification();
+
         await _firestore.collection('users').doc(user.uid).set({
           'uid': user.uid,
           'email': email,
@@ -50,7 +52,13 @@ class AuthService {
     required String password,
   }) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      ToastService.showToast('Please verify your email first.');
+      return false;
+    }
       ToastService.showToast('Successful Login');
       return true;
     } catch (e) {

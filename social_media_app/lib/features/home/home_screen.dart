@@ -128,6 +128,9 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final post = posts[index].data() as Map<String, dynamic>;
                     return ListTile(
+                      leading: CircleAvatar(
+                        child: Image.asset('assets/images/user.png'),
+                      ),
                       title: Text(post['userName'] ?? 'Unknown'),
                       subtitle: Text(post['content']),
                       trailing: Text(
