@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/core/services/toast_service.dart';
@@ -6,6 +8,7 @@ class AuthService {
   AuthService._privateConstructor();
   static final _instance = AuthService._privateConstructor();
   factory AuthService() => _instance;
+  
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -40,9 +43,11 @@ class AuthService {
       }
 
       ToastService.showToast('Registration Failed: user is null');
+
       return false;
     } catch (e) {
       ToastService.showToast('Registration Failed: ${e.toString()}');
+      log('From AuthService.registerUser :Registration Failed: ${e.toString()}');
       return false;
     }
   }

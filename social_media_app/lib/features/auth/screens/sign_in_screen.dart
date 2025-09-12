@@ -10,7 +10,7 @@ class SignInScreen extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
   final _userEmailController = TextEditingController();
-  final _userPaswordController = TextEditingController();
+  final _userPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +51,8 @@ class SignInScreen extends StatelessWidget {
                 TextFormField(
                   obscureText: true,
 
-                  controller: _userPaswordController,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'password is required ..';
-                    }
-                    return null;
-                  },
+                  controller: _userPasswordController,
+                  validator: (value) => ValidationCheck.checkPassword(value),
                   decoration: InputDecoration(
                     icon: Icon(Icons.password),
                     label: Text('enter password ..'),
@@ -71,7 +66,7 @@ class SignInScreen extends StatelessWidget {
                       if (_formKey.currentState?.validate() ?? false) {
                         bool isSuccess = await AuthService().loginUser(
                           email: _userEmailController.text,
-                          password: _userPaswordController.text,
+                          password: _userPasswordController.text,
                         );
                         if (isSuccess) {
                           Navigator.pushReplacement(

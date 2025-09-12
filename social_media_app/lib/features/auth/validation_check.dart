@@ -1,4 +1,4 @@
-import 'package:social_media_app/core/extensions/extensions.dart';
+import 'package:social_media_app/core/extensions/string_extensions.dart';
 
 class ValidationCheck {
   static String? checkName(String? value) {

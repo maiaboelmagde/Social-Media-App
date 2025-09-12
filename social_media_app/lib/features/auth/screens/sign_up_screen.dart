@@ -19,6 +19,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _userEmailController = TextEditingController();
 
   final _userPasswordController = TextEditingController();
+  final _userPasswordConfirmController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +80,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 40),
                 TextFormField(
                   obscureText: true,
+                  controller: _userPasswordConfirmController,
                   validator: (value) =>
                       ValidationCheck.checkPasswordCofirmation(
-                        value,
+                        _userPasswordConfirmController.text,
                         _userPasswordController.text,
                       ),
                   decoration: InputDecoration(
@@ -100,7 +103,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           password: _userPasswordController.text,
                         );
                         if (isSuccess) {
-                          await Future.delayed(Duration(milliseconds: 500));
+                          _userNameController.clear();
+                          _userEmailController.clear();
+                          _userPasswordController.clear();
+                          _userPasswordConfirmController.clear();
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
