@@ -3,7 +3,7 @@ import 'package:social_media_app/core/services/preference_manager.dart';
 import 'package:social_media_app/core/theme/dark_theme.dart';
 import 'package:social_media_app/core/theme/light_theme.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/auth/screens/sign_in_screen.dart';
+import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

@@ -1,43 +1,26 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/core/services/toast_service.dart';
+import 'package:social_media_app/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:social_media_app/features/auth/domain/repository/auth_repo_base.dart';
 
-class AuthService {
-  AuthService._privateConstructor();
-  static final _instance = AuthService._privateConstructor();
-  factory AuthService() => _instance;
+class AuthRepoImpl extends AuthRepoBase{
+  
+  AuthRepoImpl._privateConstructor();
+  static final _instance = AuthRepoImpl._privateConstructor();
+  factory AuthRepoImpl() => _instance;
   
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  @override
   Future<bool> registerUser({
     required String name,
     required String email,
     required String password,
   }) async {
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      User? user = userCredential.user;
-
-    
-      if (user != null) {
-
-        await user.sendEmailVerification();
-
-        await _firestore.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'email': email,
-          'name': name,
-          'username': name,
-          'bio': '',
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-
+      
+      User? user = await AuthRemoteDataSource().registerUser(email: email, password: password, name: name);
+      if(user != null){
         ToastService.showToast('Successful Registration');
         return true;
       }
@@ -52,13 +35,13 @@ class AuthService {
     }
   }
 
+  @override
   Future<bool> loginUser({
     required String email,
     required String password,
   }) async {
     try {
-      UserCredential userCredential =await _auth.signInWithEmailAndPassword(email: email, password: password);
-      User? user = userCredential.user;
+      User? user = await AuthRemoteDataSource().loginUser(email: email, password: password);
       if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
       ToastService.showToast('Please verify your email first.');
@@ -72,9 +55,10 @@ class AuthService {
     }
   }
 
+  @override
   Future<bool> logOut() async {
     try {
-      await _auth.signOut();
+      await AuthRemoteDataSource().logOut();
       ToastService.showToast('Successful Logout');
       return true;
     } catch (e) {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/auth/screens/sign_up_screen.dart';
-import 'package:social_media_app/features/auth/services/auth_service.dart';
+import 'package:social_media_app/features/auth/data/repository/auth_repo_impl.dart';
+import 'package:social_media_app/features/auth/domain/use_case/log_in_use_case.dart';
+import 'package:social_media_app/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 import 'package:social_media_app/features/home/home_screen.dart';
 
@@ -64,7 +65,7 @@ class SignInScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        bool isSuccess = await AuthService().loginUser(
+                        bool isSuccess = await LogInUseCase(authRepo: AuthRepoImpl()).call(
                           email: _userEmailController.text,
                           password: _userPasswordController.text,
                         );

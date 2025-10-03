@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/auth/screens/sign_in_screen.dart';
-import 'package:social_media_app/features/auth/services/auth_service.dart';
+import 'package:social_media_app/features/auth/data/repository/auth_repo_impl.dart';
+import 'package:social_media_app/features/auth/domain/use_case/log_out_use_case.dart';
+import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:social_media_app/features/profile/widgets/edit_personal_info.dart';
 import 'package:social_media_app/features/profile/widgets/profile_image_widget.dart';
 
@@ -66,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                 title: Text('Log out'),
                 trailing: Icon(Icons.navigate_next),
                 onTap: () async {
-                  AuthService().logOut();
+                  LogOutUseCase(authRepo: AuthRepoImpl()).call();
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => SignInScreen()),
                   );
