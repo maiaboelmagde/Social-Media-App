@@ -5,11 +5,10 @@ import 'package:social_media_app/features/auth/data/data_source/auth_remote_data
 import 'package:social_media_app/features/auth/domain/repository/auth_repo_base.dart';
 
 class AuthRepoImpl extends AuthRepoBase{
+
+  AuthRemoteDataSource remoteDataSource;
   
-  AuthRepoImpl._privateConstructor();
-  static final _instance = AuthRepoImpl._privateConstructor();
-  factory AuthRepoImpl() => _instance;
-  
+  AuthRepoImpl({required this.remoteDataSource});
 
   @override
   Future<bool> registerUser({
@@ -19,7 +18,7 @@ class AuthRepoImpl extends AuthRepoBase{
   }) async {
     try {
       
-      User? user = await AuthRemoteDataSource().registerUser(email: email, password: password, name: name);
+      User? user = await remoteDataSource.registerUser(email: email, password: password, name: name);
       if(user != null){
         ToastService.showToast('Successful Registration');
         return true;
@@ -41,7 +40,7 @@ class AuthRepoImpl extends AuthRepoBase{
     required String password,
   }) async {
     try {
-      User? user = await AuthRemoteDataSource().loginUser(email: email, password: password);
+      User? user = await remoteDataSource.loginUser(email: email, password: password);
       if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
       ToastService.showToast('Please verify your email first.');
@@ -58,7 +57,7 @@ class AuthRepoImpl extends AuthRepoBase{
   @override
   Future<bool> logOut() async {
     try {
-      await AuthRemoteDataSource().logOut();
+      await remoteDataSource.logOut();
       ToastService.showToast('Successful Logout');
       return true;
     } catch (e) {

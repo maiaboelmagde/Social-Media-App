@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/auth/data/repository/auth_repo_impl.dart';
-import 'package:social_media_app/features/auth/domain/use_case/reister_use_case.dart';
+import 'package:social_media_app/features/auth/domain/use_case/register_use_case.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 
@@ -98,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        bool isSuccess = await ReisterUseCase(authRepo: AuthRepoImpl()).call(
+                        bool isSuccess = await sl<RegisterUseCase>().call(
                           name: _userNameController.text,
                           email: _userEmailController.text,
                           password: _userPasswordController.text,

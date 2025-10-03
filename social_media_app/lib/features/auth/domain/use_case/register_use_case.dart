@@ -1,7 +1,7 @@
 import 'package:social_media_app/features/auth/domain/repository/auth_repo_base.dart';
 
-class ReisterUseCase {
-  ReisterUseCase({required this.authRepo});
+class RegisterUseCase {
+  RegisterUseCase({required this.authRepo});
   AuthRepoBase authRepo;
 
   Future<bool> call({

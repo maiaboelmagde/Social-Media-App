@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/services/preference_manager.dart';
 import 'package:social_media_app/core/theme/dark_theme.dart';
 import 'package:social_media_app/core/theme/light_theme.dart';
@@ -13,7 +14,8 @@ void main() async {
   await ThemeController().init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
+  await initDependencies();
 
   runApp(const MyApp());
 }
