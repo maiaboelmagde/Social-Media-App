@@ -1,10 +1,10 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/core/di/service_locator.dart';
+import 'package:social_media_app/core/services/toast_service.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/profile/profile_screen.dart';
+import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_case.dart';
+import 'package:social_media_app/features/profile/presentation/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final TextEditingController _postController = TextEditingController();
@@ -15,30 +15,11 @@ class HomeScreen extends StatelessWidget {
     final content = _postController.text.trim();
     if (content.isEmpty) return;
 
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      log("User ID: ${user.uid}");
-    } else {
-      log("No user is currently signed in.");
-      return;
+    try{
+      await sl<AddPostUseCase>().call(content);
+    }catch (e){
+      ToastService.showToast(e.toString());
     }
-
-    final userDoc = await FirebaseFirestore.instance
-    .collection('users')
-    .doc(user.uid)
-    .get();
-    
-
-  final name = userDoc.data()?['name'] ?? 'Unknown';
-
-    await FirebaseFirestore.instance.collection('posts').add({
-      'content': content,
-      'userId': user.uid,
-      'userName': name,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
     _postController.clear();
   }
 

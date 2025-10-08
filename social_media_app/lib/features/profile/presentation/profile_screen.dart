@@ -3,8 +3,8 @@ import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/domain/use_case/log_out_use_case.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:social_media_app/features/profile/widgets/edit_personal_info.dart';
-import 'package:social_media_app/features/profile/widgets/profile_image_widget.dart';
+import 'package:social_media_app/features/profile/presentation/widgets/edit_personal_info.dart';
+import 'package:social_media_app/features/profile/presentation/widgets/profile_image_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

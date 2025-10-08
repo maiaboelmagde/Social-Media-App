@@ -1,0 +1,18 @@
+import 'package:social_media_app/core/constants/firestore_constants.dart';
+import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
+
+class PostModel extends PostEntity {
+  PostModel({
+    required super.content,
+    required super.userId,
+    required super.userName,
+    required super.timestamp,
+  });
+
+  factory PostModel.fromJson(jsonData) => PostModel(
+    content: jsonData[FirestoreConstants.postFields.content],
+    userId: jsonData[FirestoreConstants.postFields.userId],
+    userName: jsonData[FirestoreConstants.postFields.userName],
+    timestamp: jsonData[FirestoreConstants.postFields.timestamp],
+  );
+}

@@ -4,7 +4,7 @@ import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/domain/use_case/log_in_use_case.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
-import 'package:social_media_app/features/home/home_screen.dart';
+import 'package:social_media_app/features/posts/presentation/home_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
