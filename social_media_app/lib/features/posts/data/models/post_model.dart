@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_media_app/core/constants/firestore_constants.dart';
 import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
 
@@ -10,9 +11,9 @@ class PostModel extends PostEntity {
   });
 
   factory PostModel.fromJson(jsonData) => PostModel(
-    content: jsonData[FirestoreConstants.postFields.content],
-    userId: jsonData[FirestoreConstants.postFields.userId],
-    userName: jsonData[FirestoreConstants.postFields.userName],
-    timestamp: jsonData[FirestoreConstants.postFields.timestamp],
+    content: jsonData[FirestoreConstants.postFields.content] ?? '',
+    userId: jsonData[FirestoreConstants.postFields.userId] ?? '',
+    userName: jsonData[FirestoreConstants.postFields.userName] ?? 'unknown',
+    timestamp: (jsonData[FirestoreConstants.postFields.timestamp] as Timestamp?)?.toDate(),
   );
 }

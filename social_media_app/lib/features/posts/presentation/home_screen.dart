@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/services/toast_service.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
+import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_case.dart';
+import 'package:social_media_app/features/posts/domain/use_cases/get_posts_stream_use_case.dart';
 import 'package:social_media_app/features/profile/presentation/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -88,36 +89,32 @@ class HomeScreen extends StatelessWidget {
 
           // Posts list
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('posts')
-                  .orderBy('timestamp', descending: true)
-                  .snapshots(),
+            child: StreamBuilder<List<PostEntity>>(
+              stream: sl<GetPostsStreamUseCase>().call(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                final posts = snapshot.data ?? [];
+
+                if (posts.isEmpty) {
                   return const Center(child: Text("No posts yet."));
                 }
-
-                final posts = snapshot.data!.docs;
 
                 return ListView.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                    final post = posts[index].data() as Map<String, dynamic>;
+                    final post = posts[index];
                     return ListTile(
                       leading: CircleAvatar(
                         child: Image.asset('assets/images/user.png'),
                       ),
-                      title: Text(post['userName'] ?? 'Unknown'),
-                      subtitle: Text(post['content']),
+                      title: Text(post.userName),
+                      subtitle: Text(post.content),
                       trailing: Text(
-                        (post['timestamp'] as Timestamp?)
-                                ?.toDate()
-                                .toLocal()
+                                post.timestamp
+                                ?.toLocal()
                                 .toString()
                                 .split('.')
                                 .first ??
