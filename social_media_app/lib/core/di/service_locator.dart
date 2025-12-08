@@ -7,6 +7,7 @@ import 'package:social_media_app/features/auth/domain/repository/auth_repo_base.
 import 'package:social_media_app/features/auth/domain/use_case/log_in_use_case.dart';
 import 'package:social_media_app/features/auth/domain/use_case/log_out_use_case.dart';
 import 'package:social_media_app/features/auth/domain/use_case/register_use_case.dart';
+import 'package:social_media_app/features/auth/domain/use_case/reset_password_usecase.dart';
 import 'package:social_media_app/features/posts/data/data_source/posts_data_source.dart';
 import 'package:social_media_app/features/posts/data/repository/posts_repo_impl.dart';
 import 'package:social_media_app/features/posts/domain/repository/posts_repo_base.dart';
@@ -28,6 +29,7 @@ Future<void> initDependencies() async{
   sl.registerLazySingleton(()=>RegisterUseCase(authRepo: sl<AuthRepoBase>()));
   sl.registerLazySingleton(()=>LogInUseCase(authRepo: sl<AuthRepoBase>()));
   sl.registerLazySingleton(()=>LogOutUseCase(authRepo: sl<AuthRepoBase>()));
+  sl.registerLazySingleton(()=>ResetPasswordUsecase(authRepo: sl<AuthRepoBase>()));
 
   sl.registerLazySingleton(()=>AddPostUseCase(postsRepo: sl<PostsRepoBase>()));
   sl.registerLazySingleton(()=>GetPostsStreamUseCase(postsRepo: sl<PostsRepoBase>()));

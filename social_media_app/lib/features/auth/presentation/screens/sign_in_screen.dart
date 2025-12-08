@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/domain/use_case/log_in_use_case.dart';
+import 'package:social_media_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 import 'package:social_media_app/features/posts/presentation/home_screen.dart';
@@ -58,6 +59,22 @@ class SignInScreen extends StatelessWidget {
                     icon: Icon(Icons.password),
                     label: Text('enter password ..'),
                   ),
+                ),
+                Row(
+                  children: [
+                    Text('Forgot password ?'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResetPasswordScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Reset..'),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 100),
                 SizedBox(

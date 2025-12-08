@@ -11,4 +11,8 @@ abstract class AuthRepoBase {
   });
 
   Future<bool> logOut();
+
+  resetPassword({
+    required String email
+  });
 }

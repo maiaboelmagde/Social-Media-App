@@ -4,10 +4,9 @@ import 'package:social_media_app/core/services/toast_service.dart';
 import 'package:social_media_app/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:social_media_app/features/auth/domain/repository/auth_repo_base.dart';
 
-class AuthRepoImpl extends AuthRepoBase{
-
+class AuthRepoImpl extends AuthRepoBase {
   AuthRemoteDataSource remoteDataSource;
-  
+
   AuthRepoImpl({required this.remoteDataSource});
 
   @override
@@ -17,9 +16,12 @@ class AuthRepoImpl extends AuthRepoBase{
     required String password,
   }) async {
     try {
-      
-      User? user = await remoteDataSource.registerUser(email: email, password: password, name: name);
-      if(user != null){
+      User? user = await remoteDataSource.registerUser(
+        email: email,
+        password: password,
+        name: name,
+      );
+      if (user != null) {
         ToastService.showToast('Successful Registration');
         return true;
       }
@@ -29,7 +31,9 @@ class AuthRepoImpl extends AuthRepoBase{
       return false;
     } catch (e) {
       ToastService.showToast('Registration Failed: ${e.toString()}');
-      log('From AuthService.registerUser :Registration Failed: ${e.toString()}');
+      log(
+        'From AuthService.registerUser :Registration Failed: ${e.toString()}',
+      );
       return false;
     }
   }
@@ -40,12 +44,15 @@ class AuthRepoImpl extends AuthRepoBase{
     required String password,
   }) async {
     try {
-      User? user = await remoteDataSource.loginUser(email: email, password: password);
+      User? user = await remoteDataSource.loginUser(
+        email: email,
+        password: password,
+      );
       if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
-      ToastService.showToast('Please verify your email first.');
-      return false;
-    }
+        await user.sendEmailVerification();
+        ToastService.showToast('Please verify your email first.');
+        return false;
+      }
       ToastService.showToast('Successful Login');
       return true;
     } catch (e) {
@@ -62,6 +69,18 @@ class AuthRepoImpl extends AuthRepoBase{
       return true;
     } catch (e) {
       ToastService.showToast('Logout failed ${e.toString()}');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> resetPassword({required String email}) async {
+    try {
+      await remoteDataSource.resetPassword(email: email);
+      ToastService.showToast('Email sent Sucessfully ..');
+      return true;
+    } on Exception catch (_) {
+      ToastService.showToast('Failed to send this email !! please try again');
       return false;
     }
   }
