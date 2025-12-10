@@ -4,6 +4,7 @@ import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/domain/use_case/log_in_use_case.dart';
 import 'package:social_media_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:social_media_app/features/auth/presentation/widgets/password_text_form_field.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 import 'package:social_media_app/features/posts/presentation/home_screen.dart';
 
@@ -51,16 +52,7 @@ class SignInScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                TextFormField(
-                  obscureText: true,
-
-                  controller: _userPasswordController,
-                  validator: (value) => ValidationCheck.checkPassword(value),
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.password),
-                    label: Text('enter password ..'),
-                  ),
-                ),
+                PasswordTextFormField(userPasswordController: _userPasswordController, validator: (value) => ValidationCheck.checkPassword(value),),
                 Row(
                   children: [
                     Text('Forgot password ?'),

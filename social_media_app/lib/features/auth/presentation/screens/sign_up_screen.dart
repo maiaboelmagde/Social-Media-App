@@ -3,16 +3,12 @@ import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/auth/domain/use_case/register_use_case.dart';
 import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:social_media_app/features/auth/presentation/widgets/password_text_form_field.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _userNameController = TextEditingController();
@@ -21,7 +17,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final _userPasswordController = TextEditingController();
   final _userPasswordConfirmController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,29 +64,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-                TextFormField(
-                  obscureText: true,
-
-                  controller: _userPasswordController,
+                PasswordTextFormField(
+                  userPasswordController: _userPasswordController,
                   validator: (value) => ValidationCheck.checkPassword(value),
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.password),
-                    label: Text('enter password ..'),
-                  ),
                 ),
                 SizedBox(height: 40),
-                TextFormField(
-                  obscureText: true,
-                  controller: _userPasswordConfirmController,
+                PasswordTextFormField(
+                  userPasswordController: _userPasswordConfirmController,
                   validator: (value) =>
                       ValidationCheck.checkPasswordCofirmation(
                         _userPasswordConfirmController.text,
                         _userPasswordController.text,
                       ),
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.password),
-                    label: Text('Password confirmation ..'),
-                  ),
                 ),
                 SizedBox(height: 80),
                 SizedBox(
