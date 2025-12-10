@@ -6,17 +6,34 @@ import 'package:social_media_app/features/auth/presentation/screens/sign_in_scre
 import 'package:social_media_app/features/auth/presentation/widgets/password_text_form_field.dart';
 import 'package:social_media_app/features/auth/validation_check.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _userNameController = TextEditingController();
-
   final _userEmailController = TextEditingController();
-
   final _userPasswordController = TextEditingController();
   final _userPasswordConfirmController = TextEditingController();
+
+  final focusName = FocusNode();
+  final focusEmail = FocusNode();
+  final focusPassword = FocusNode();
+  final focusConfirmPassword = FocusNode();
+
+  @override
+  void dispose() {
+    focusName.dispose();
+    focusEmail.dispose();
+    focusPassword.dispose();
+    focusConfirmPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +70,11 @@ class SignUpScreen extends StatelessWidget {
                     icon: Icon(Icons.text_fields),
                     label: Text('Enter your Name'),
                   ),
+                  focusNode: focusName,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(focusEmail);
+                  },
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(height: 40),
                 TextFormField(
@@ -62,11 +84,20 @@ class SignUpScreen extends StatelessWidget {
                     icon: Icon(Icons.email),
                     label: Text('Enter your email'),
                   ),
+                  focusNode: focusEmail,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(focusPassword);
+                  },
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(height: 40),
                 PasswordTextFormField(
                   userPasswordController: _userPasswordController,
                   validator: (value) => ValidationCheck.checkPassword(value),
+                  focusNode: focusPassword,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(focusConfirmPassword);
+                  },
                 ),
                 SizedBox(height: 40),
                 PasswordTextFormField(
@@ -76,6 +107,7 @@ class SignUpScreen extends StatelessWidget {
                         _userPasswordConfirmController.text,
                         _userPasswordController.text,
                       ),
+                  focusNode: focusConfirmPassword,
                 ),
                 SizedBox(height: 80),
                 SizedBox(

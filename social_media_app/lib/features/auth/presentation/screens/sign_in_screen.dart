@@ -8,12 +8,28 @@ import 'package:social_media_app/features/auth/presentation/widgets/password_tex
 import 'package:social_media_app/features/auth/validation_check.dart';
 import 'package:social_media_app/features/posts/presentation/home_screen.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _userEmailController = TextEditingController();
   final _userPasswordController = TextEditingController();
+
+  final focusEmail = FocusNode();
+  final focusPassword = FocusNode();
+
+  @override
+  void dispose() {
+    focusEmail.dispose();
+    focusPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +60,11 @@ class SignInScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 40),
                 TextFormField(
+                  focusNode: focusEmail,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(focusPassword);
+                  },
+                  textInputAction: TextInputAction.next,
                   controller: _userEmailController,
                   validator: (value) => ValidationCheck.checkEmail(value),
                   decoration: InputDecoration(
@@ -52,7 +73,12 @@ class SignInScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                PasswordTextFormField(userPasswordController: _userPasswordController, validator: (value) => ValidationCheck.checkPassword(value),),
+                PasswordTextFormField(
+                  userPasswordController: _userPasswordController,
+                  validator: (value) => ValidationCheck.checkPassword(value),
+                  focusNode: focusPassword,
+                  onFieldSubmitted: (_) {},
+                ),
                 Row(
                   children: [
                     Text('Forgot password ?'),
