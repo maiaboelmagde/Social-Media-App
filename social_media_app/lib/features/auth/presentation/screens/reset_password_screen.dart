@@ -15,6 +15,7 @@ class ResetPasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Reset Password')),
       body: Form(
+        autovalidateMode: AutovalidateMode.onUnfocus,
         key: formKey,
         child: ListView(
           children: [

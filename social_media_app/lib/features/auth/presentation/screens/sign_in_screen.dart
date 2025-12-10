@@ -32,6 +32,7 @@ class SignInScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Form(
+            autovalidateMode: AutovalidateMode.onUnfocus,
             key: _formKey,
             child: Column(
               children: [
