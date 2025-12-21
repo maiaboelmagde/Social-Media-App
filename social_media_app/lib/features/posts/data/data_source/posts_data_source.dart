@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/core/constants/firestore_constants.dart';
@@ -29,7 +31,8 @@ class PostsDataSource {
         FirestoreConstants.postFields.userName: userName,
         FirestoreConstants.postFields.timestamp: FieldValue.serverTimestamp(),
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException catch (e) {
+      log('Error from PostsDataSource-addPost : ${e.message}');
       throw Exception('Server Error while adding the post, please try later');
     } catch (e) {
       throw Exception('Unexpected error occurred.');
@@ -37,6 +40,7 @@ class PostsDataSource {
   }
 
   Stream<List<PostEntity>> getPostsStream() {
+
     return fireStore
         .collection(FirestoreConstants.postsCollection)
         .orderBy(FirestoreConstants.postFields.timestamp, descending: true)
