@@ -15,4 +15,9 @@ class PostsRepoImpl extends PostsRepoBase {
   Stream<List<PostEntity>> getPostsStream() {
     return postsDataSource.getPostsStream();
   }
+  
+  @override
+  Future<void> deletePost(String postId) {
+    return postsDataSource.deletePost(postId);
+  }
 }

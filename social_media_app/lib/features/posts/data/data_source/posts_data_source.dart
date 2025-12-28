@@ -40,15 +40,28 @@ class PostsDataSource {
   }
 
   Stream<List<PostEntity>> getPostsStream() {
-
     return fireStore
         .collection(FirestoreConstants.postsCollection)
         .orderBy(FirestoreConstants.postFields.timestamp, descending: true)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => PostModel.fromJson(doc.data()))
-              .toList(),
-        );
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => PostModel.fromJson(doc.data(),doc.id))
+              .toList();
+        });
+  }
+
+  Future<void> deletePost(postId) async {
+    try {
+      await fireStore
+          .collection(FirestoreConstants.postsCollection)
+          .doc(postId)
+          .delete();
+    } on FirebaseException catch (e) {
+      log('Error from PostsDataSource-deletePost : ${e.message}');
+      throw Exception('Server Error while deleting the post, please try later');
+    } catch (e) {
+      throw Exception('Unexpected error occurred.');
+    }
   }
 }

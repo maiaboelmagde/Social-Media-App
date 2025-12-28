@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
-import 'package:social_media_app/core/extensions/media_query_values.dart';
 import 'package:social_media_app/core/services/toast_service.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/get_posts_stream_use_case.dart';
+import 'package:social_media_app/features/posts/presentation/widgets/post_widget.dart';
 import 'package:social_media_app/features/profile/presentation/profile_screen.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatelessWidget {
   final TextEditingController _postController = TextEditingController();
@@ -107,37 +106,7 @@ class HomeScreen extends StatelessWidget {
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
                     final post = posts[index];
-                    return Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListTile(
-                            leading: CircleAvatar(
-                              child: Image.asset('assets/images/user.png'),
-                            ),
-                            title: Text(post.userName),
-                            //subtitle: Text(post.content),
-                            subtitle: (post.timestamp != null)
-                                ? Text(
-                                    timeago.format(post.timestamp!),
-                                    style: TextStyle(fontSize: 12),
-                                  )
-                                : Text(''),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: context.wp(0.1),
-                              right: context.wp(0.1),
-                              bottom: context.wp(0.05),
-                            ),
-                            child: Text(
-                              post.content,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return PostWidget(post: post);
                   },
                 );
               },
