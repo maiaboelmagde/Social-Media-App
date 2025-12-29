@@ -20,4 +20,9 @@ class PostsRepoImpl extends PostsRepoBase {
   Future<void> deletePost(String postId) {
     return postsDataSource.deletePost(postId);
   }
+  
+  @override
+  Future<void> updatePost(String postId, String newContent) {
+    return postsDataSource.updatePost(postId, newContent);
+  }
 }

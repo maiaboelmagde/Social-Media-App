@@ -4,4 +4,5 @@ abstract class PostsRepoBase {
   Future<void> addPost(String content);
   Stream<List<PostEntity>> getPostsStream();
   Future<void> deletePost(String postId);
+  Future<void> updatePost(String postId, String newContent);
 }

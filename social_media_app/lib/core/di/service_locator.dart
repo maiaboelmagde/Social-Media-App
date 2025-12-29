@@ -14,6 +14,7 @@ import 'package:social_media_app/features/posts/domain/repository/posts_repo_bas
 import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/delete_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/get_posts_stream_use_case.dart';
+import 'package:social_media_app/features/posts/domain/use_cases/update_post_use_case.dart';
 
 final sl = GetIt.instance;
 
@@ -35,4 +36,5 @@ Future<void> initDependencies() async{
   sl.registerLazySingleton(()=>AddPostUseCase(postsRepo: sl<PostsRepoBase>()));
   sl.registerLazySingleton(()=>GetPostsStreamUseCase(postsRepo: sl<PostsRepoBase>()));
   sl.registerLazySingleton(()=>DeletePostUseCase(postRepo:sl<PostsRepoBase>()));
+  sl.registerLazySingleton(()=>UpdatePostUseCase(postRepo: sl<PostsRepoBase>()));
 }

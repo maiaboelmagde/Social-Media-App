@@ -64,4 +64,17 @@ class PostsDataSource {
       throw Exception('Unexpected error occurred.');
     }
   }
+
+  Future<void> updatePost(String postId,String newContent) async{
+    try{
+      await fireStore.collection(FirestoreConstants.postsCollection).doc(postId).update({
+        FirestoreConstants.postFields.content : newContent
+      });
+    }on FirebaseException catch (e) {
+      log('Error from PostsDataSource-updatePost : ${e.message}');
+      throw Exception('Server Error while updating the post, please try later');
+    } catch (e) {
+      throw Exception('Unexpected error occurred.');
+    }
+  } 
 }
