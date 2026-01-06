@@ -7,6 +7,7 @@ class UserFields {
   final String email = 'email';
   final String bio = 'bio';
   final String createdAt = 'createdAt';
+  final String profileImageUrl = 'profileImageUrl';
 }
 
 class PostFields {
