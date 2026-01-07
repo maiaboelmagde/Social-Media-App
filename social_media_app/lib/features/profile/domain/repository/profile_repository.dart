@@ -5,7 +5,7 @@ abstract class ProfileRepositoryBase {
     required String userId,
   });
 
-  Future<void> updateProfileImage({
+  Future<String> updateProfileImage({
     required String userId,
     required File image,
   });

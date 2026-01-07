@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,20 +22,23 @@ class ProfileRepositoryImpl implements ProfileRepositoryBase {
   }
 
   @override
-  Future<void> updateProfileImage({
+  Future<String> updateProfileImage({
     required String userId,
     required File image,
   }) async {
+    //log(' From "ProfileRepositoryImpl" Updating profile image for userId: $userId , image path: ${image.path}');
     String uploadedImageUrl = await imageRemoteDataSource.uploadImage(
       userId: userId,
       imageFile: image,
     );
-
+  //log(' From "ProfileRepositoryImpl" Profile image uploaded to URL: $uploadedImageUrl');
     await firestore
         .collection(FirestoreConstants.usersCollection)
         .doc(userId)
         .update({
           FirestoreConstants.userFields.profileImageUrl: uploadedImageUrl,
         });
+
+        return uploadedImageUrl;
   }
 }

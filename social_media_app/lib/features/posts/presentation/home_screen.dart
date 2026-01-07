@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/services/toast_service.dart';
-import 'package:social_media_app/core/theme/theme_controller.dart';
 import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/get_posts_stream_use_case.dart';
 import 'package:social_media_app/features/posts/presentation/widgets/post_widget.dart';
-import 'package:social_media_app/features/profile/presentation/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final TextEditingController _postController = TextEditingController();
@@ -29,26 +27,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Spacer(),
-            Text('Home'),
-            Spacer(),
-            IconButton(
-              icon: Icon(Icons.color_lens),
-              onPressed: () => ThemeController.toggleTheme(),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
-              icon: Icon(Icons.person),
-            ),
-          ],
-        ),
+        title: Text('Home'),
       ),
       body: Column(
         children: [

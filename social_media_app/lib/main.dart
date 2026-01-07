@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_app/app/auth_gate.dart';
+import 'package:social_media_app/core/constants/supabase_config.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/services/preference_manager.dart';
 import 'package:social_media_app/core/theme/dark_theme.dart';
 import 'package:social_media_app/core/theme/light_theme.dart';
 import 'package:social_media_app/core/theme/theme_controller.dart';
-import 'package:social_media_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,6 +16,10 @@ void main() async {
   await ThemeController().init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await Supabase.initialize(
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
   );
   await initDependencies();
 
@@ -35,7 +41,7 @@ class MyApp extends StatelessWidget {
           themeMode: value,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: SignInScreen(),
+          home: AuthGate(),
         );
       },
     );

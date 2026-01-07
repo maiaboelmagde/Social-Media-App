@@ -43,7 +43,8 @@ dependencies:
   firebase_storage: ^12.4.7
   get_it: ^8.2.0
   timeago: ^3.7.1
-  supabase_flutter: ^2.0.0
+  supabase_flutter: ^2.1.1
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:

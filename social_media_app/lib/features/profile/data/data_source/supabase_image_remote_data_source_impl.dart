@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:social_media_app/core/constants/supabase_constants.dart';
@@ -14,10 +15,25 @@ class SupabaseImageRemoteDataSourceImpl implements ImageRemoteDataSourceBase {
     required File imageFile,
   }) async {
     String path = SupabaseConstants.getUserImagePath(userId);
-    await supabase.storage
-        .from(SupabaseConstants.userImagesBucket)
-        .upload(path, imageFile, fileOptions: const FileOptions(upsert: true));
-
+    // log(
+    //   'From "SupabaseImageRemoteDataSourceImpl" Uploading image for userId: $userId to path: $path',
+    // );
+    try {
+      await supabase.storage
+          .from(SupabaseConstants.userImagesBucket)
+          .upload(
+            path,
+            imageFile,
+            fileOptions: const FileOptions(upsert: true),
+          );
+    } on Exception catch (e) {
+      // log(
+      //   ' From "SupabaseImageRemoteDataSourceImpl" Error uploading image: $e',
+      // );
+    }
+    // log(
+    //   ' From "SupabaseImageRemoteDataSourceImpl" Image uploaded successfully to path: $path',
+    // );
     return supabase.storage
         .from(SupabaseConstants.userImagesBucket)
         .getPublicUrl(path);

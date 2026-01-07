@@ -32,7 +32,7 @@ class PostsDataSource {
         FirestoreConstants.postFields.timestamp: FieldValue.serverTimestamp(),
       });
     } on FirebaseException catch (e) {
-      log('Error from PostsDataSource-addPost : ${e.message}');
+      //log('Error from PostsDataSource-addPost : ${e.message}');
       throw Exception('Server Error while adding the post, please try later');
     } catch (e) {
       throw Exception('Unexpected error occurred.');
@@ -58,7 +58,7 @@ class PostsDataSource {
           .doc(postId)
           .delete();
     } on FirebaseException catch (e) {
-      log('Error from PostsDataSource-deletePost : ${e.message}');
+      //log('Error from PostsDataSource-deletePost : ${e.message}');
       throw Exception('Server Error while deleting the post, please try later');
     } catch (e) {
       throw Exception('Unexpected error occurred.');
@@ -71,7 +71,7 @@ class PostsDataSource {
         FirestoreConstants.postFields.content : newContent
       });
     }on FirebaseException catch (e) {
-      log('Error from PostsDataSource-updatePost : ${e.message}');
+      //log('Error from PostsDataSource-updatePost : ${e.message}');
       throw Exception('Server Error while updating the post, please try later');
     } catch (e) {
       throw Exception('Unexpected error occurred.');
