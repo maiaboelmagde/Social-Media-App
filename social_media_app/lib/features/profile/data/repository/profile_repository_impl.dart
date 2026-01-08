@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +30,7 @@ class ProfileRepositoryImpl implements ProfileRepositoryBase {
       userId: userId,
       imageFile: image,
     );
-  //log(' From "ProfileRepositoryImpl" Profile image uploaded to URL: $uploadedImageUrl');
+    //log(' From "ProfileRepositoryImpl" Profile image uploaded to URL: $uploadedImageUrl');
     await firestore
         .collection(FirestoreConstants.usersCollection)
         .doc(userId)
@@ -39,6 +38,28 @@ class ProfileRepositoryImpl implements ProfileRepositoryBase {
           FirestoreConstants.userFields.profileImageUrl: uploadedImageUrl,
         });
 
-        return uploadedImageUrl;
+    final userSnapShot = await firestore
+        .collection(FirestoreConstants.usersCollection)
+        .doc(userId)
+        .get();
+
+    final userPostsIds =
+        userSnapShot.data()?[FirestoreConstants.userFields.postsIds] ?? [];
+
+    // Batch update posts :
+    final batch = firestore.batch();
+    for (final postId in userPostsIds) {
+      final postRef = firestore
+          .collection(FirestoreConstants.postsCollection)
+          .doc(postId);
+
+      batch.update(postRef, {
+        FirestoreConstants.postFields.userProfileImageUrl: uploadedImageUrl,
+      });
+    }
+    // Commit batch
+    await batch.commit();
+    
+    return uploadedImageUrl;
   }
 }

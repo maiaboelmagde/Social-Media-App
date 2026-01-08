@@ -8,7 +8,8 @@ class PostModel extends PostEntity {
     required super.content,
     required super.userId,
     required super.userName,
-    required super.timestamp,
+    super.userProfileImageUrl,
+    super.timestamp,
   });
 
   factory PostModel.fromJson(jsonData,String postId) => PostModel(
@@ -16,6 +17,7 @@ class PostModel extends PostEntity {
     content: jsonData[FirestoreConstants.postFields.content] ?? '',
     userId: jsonData[FirestoreConstants.postFields.userId] ?? '',
     userName: jsonData[FirestoreConstants.postFields.userName] ?? 'unknown',
+    userProfileImageUrl: jsonData[FirestoreConstants.postFields.userProfileImageUrl],
     timestamp: (jsonData[FirestoreConstants.postFields.timestamp] as Timestamp?)?.toDate(),
   );
 }

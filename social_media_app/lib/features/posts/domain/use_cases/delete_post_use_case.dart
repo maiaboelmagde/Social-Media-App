@@ -4,7 +4,7 @@ class DeletePostUseCase {
   PostsRepoBase postRepo;
   DeletePostUseCase({required this.postRepo});
 
-  Future<void> call(String postId){
-    return postRepo.deletePost(postId);
+  Future<void> call(String postId, String userId){
+    return postRepo.deletePost(postId,userId);
   }
 }

@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/core/di/service_locator.dart';
 import 'package:social_media_app/core/Enums/post_options_enum.dart';
 import 'package:social_media_app/core/extensions/media_query_values.dart';
 import 'package:social_media_app/features/posts/domain/entities/post_entity.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/delete_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/update_post_use_case.dart';
+import 'package:social_media_app/features/profile/presentation/cubits/profile_image_cubit/profile_image_cubit.dart';
+import 'package:social_media_app/features/profile/presentation/cubits/profile_image_cubit/profile_image_state.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostWidget extends StatelessWidget {
@@ -25,7 +28,27 @@ class PostWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            leading: CircleAvatar(child: Image.asset('assets/images/user.png')),
+            leading: post.userId == currentUserId
+                ? BlocBuilder<ProfileImageCubit, ProfileImageState>(
+                    builder: (context, state) {
+                      if (state is ProfileImageLoading) {
+                        return CircleAvatar(child: CircularProgressIndicator());
+                      }
+
+                      return CircleAvatar(
+                        backgroundImage: post.userProfileImageUrl == null
+                            ? AssetImage('assets/images/user.png')
+                            : NetworkImage(post.userProfileImageUrl!)
+                                  as ImageProvider,
+                      );
+                    },
+                  )
+                : CircleAvatar(
+                    backgroundImage: post.userProfileImageUrl == null
+                        ? AssetImage('assets/images/user.png')
+                        : NetworkImage(post.userProfileImageUrl!)
+                              as ImageProvider,
+                  ),
             title: Text(post.userName),
             trailing: currentUserId == post.userId
                 ? PopupMenuButton(
@@ -57,7 +80,10 @@ class PostWidget extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                sl<DeletePostUseCase>().call(post.postId);
+                                sl<DeletePostUseCase>().call(
+                                  post.postId,
+                                  post.userId,
+                                );
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.red,

@@ -24,7 +24,8 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 25),
                   child: Column(
                     children: [
-                      ProfileImageWidget(),
+                      //TODO: Replace with actual user image URL
+                      ProfileImageWidget(imageUrl: 'https://www.shutterstock.com/image-vector/no-image-available-icon-flat-260nw-1240855801.jpg',),
                       SizedBox(height: 8),
                     ],
                   ),

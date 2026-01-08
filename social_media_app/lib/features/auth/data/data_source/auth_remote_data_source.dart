@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social_media_app/core/constants/firestore_constants.dart';
 
 class AuthRemoteDataSource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,15 +21,13 @@ class AuthRemoteDataSource {
     if (user != null) {
       await user.sendEmailVerification();
 
-      await _firestore.collection('users').doc(user.uid).set({
-        'uid': user.uid,
-        'email': email,
-        'name': name,
-        'username': name,
-        'bio': '',
-        'createdAt': FieldValue.serverTimestamp(),
+      await _firestore.collection(FirestoreConstants.usersCollection).doc(user.uid).set({
+        FirestoreConstants.userFields.uid: user.uid,
+        FirestoreConstants.userFields.email: email,
+        FirestoreConstants.userFields.name: name,
+        FirestoreConstants.userFields.bio: '',
+        FirestoreConstants.userFields.createdAt: FieldValue.serverTimestamp(),
       });
-
     }
 
     return user;

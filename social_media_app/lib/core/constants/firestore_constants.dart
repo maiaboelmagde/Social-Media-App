@@ -3,11 +3,12 @@ class UserFields {
 
   final String uid = 'uid';
   final String name = 'name';
-  final String username = 'username';
+  final String password = 'password';
   final String email = 'email';
   final String bio = 'bio';
   final String createdAt = 'createdAt';
   final String profileImageUrl = 'profileImageUrl';
+  final String postsIds = 'postsIds';
 }
 
 class PostFields {
@@ -16,6 +17,7 @@ class PostFields {
   final String content = 'content';
   final String userId = 'userId';
   final String userName = 'userName';
+  final String userProfileImageUrl = 'userProfileImageUrl';
   final String timestamp = 'timestamp';
 }
 

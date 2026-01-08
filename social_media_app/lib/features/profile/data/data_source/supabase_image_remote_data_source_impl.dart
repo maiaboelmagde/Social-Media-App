@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:social_media_app/core/constants/supabase_constants.dart';
+import 'package:social_media_app/core/errors/exceptions.dart';
 import 'package:social_media_app/features/profile/data/data_source/image_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,28 +15,42 @@ class SupabaseImageRemoteDataSourceImpl implements ImageRemoteDataSourceBase {
     required String userId,
     required File imageFile,
   }) async {
-    String path = SupabaseConstants.getUserImagePath(userId);
-    // log(
-    //   'From "SupabaseImageRemoteDataSourceImpl" Uploading image for userId: $userId to path: $path',
-    // );
+    final path = SupabaseConstants.getUserImagePath(userId);
+
     try {
       await supabase.storage
           .from(SupabaseConstants.userImagesBucket)
           .upload(
             path,
             imageFile,
-            fileOptions: const FileOptions(upsert: true),
+            fileOptions: const FileOptions(
+              upsert: true,
+              contentType: 'image/jpeg',
+            ),
           );
-    } on Exception catch (e) {
-      // log(
-      //   ' From "SupabaseImageRemoteDataSourceImpl" Error uploading image: $e',
-      // );
+
+      return supabase.storage
+          .from(SupabaseConstants.userImagesBucket)
+          .getPublicUrl(path);
+    } on StorageException catch (e) {
+      log(
+        'From "SupabaseImageRemoteDataSourceImpl" Supabase storage error: ${e.message}',
+      );
+      throw ImageUploadException(
+        'Could not upload image right now. Please try again later.',
+      );
+    } on SocketException catch (e) {
+      log('From "SupabaseImageRemoteDataSourceImpl" Network error: $e');
+      throw ImageUploadException(
+        'No internet connection. Please check your network and try again.',
+      );
+    } catch (e, s) {
+      log(
+        'From "SupabaseImageRemoteDataSourceImpl" Unexpected upload error: $e\n$s',
+      );
+      throw ImageUploadException(
+        'Something went wrong while uploading the image.',
+      );
     }
-    // log(
-    //   ' From "SupabaseImageRemoteDataSourceImpl" Image uploaded successfully to path: $path',
-    // );
-    return supabase.storage
-        .from(SupabaseConstants.userImagesBucket)
-        .getPublicUrl(path);
   }
 }

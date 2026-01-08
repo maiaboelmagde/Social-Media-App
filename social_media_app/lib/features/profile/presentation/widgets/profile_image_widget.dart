@@ -10,22 +10,30 @@ import 'package:social_media_app/features/profile/presentation/cubits/profile_im
 import 'package:social_media_app/features/profile/presentation/cubits/profile_image_cubit/profile_image_state.dart';
 
 class ProfileImageWidget extends StatelessWidget {
-  const ProfileImageWidget({super.key});
+  ProfileImageWidget({super.key, required this.imageUrl});
+  String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileImageCubit, ProfileImageState>(
       builder: (context, state) {
         log('From "ProfileImageWidget" Current ProfileImageState: $state');
-        if(state is ProfileImageFailure) {
-          log('From "ProfileImageWidget" Profile image update failed: ${state.errorMessage}');
-          ToastService.showToast('Profile image update failed: ${state.errorMessage}');
+        if (state is ProfileImageFailure) {
+          log(
+            'From "ProfileImageWidget" Profile image update failed: ${state.errorMessage}',
+          );
+          ToastService.showToast(
+            'Profile image update failed: ${state.errorMessage}',
+          );
         }
+
         return CircleAvatar(
           radius: 50,
           backgroundColor: Theme.of(context).colorScheme.secondary,
           backgroundImage: state is ProfileImageSuccess
               ? NetworkImage(state.imageUrl)
+              : imageUrl != null
+              ? NetworkImage(imageUrl!)
               : const AssetImage('assets/images/user.png') as ImageProvider,
           child: state is ProfileImageLoading
               ? const CircularProgressIndicator(strokeWidth: 2)
@@ -39,10 +47,10 @@ class ProfileImageWidget extends StatelessWidget {
 class PickImageIconWidget extends StatelessWidget {
   const PickImageIconWidget({super.key});
 
-  void _showImageSourceDialog(
-    BuildContext context,
-    Function(XFile file) selectedFile,
-  ) {
+  void _showImageSourceDialog({
+    required BuildContext context,
+    required Function(XFile file) selectedFile,
+  }) {
     showDialog(
       context: context,
       builder: (context) {
@@ -101,13 +109,16 @@ class PickImageIconWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 60, top: 60),
       child: GestureDetector(
         onTap: () {
-          _showImageSourceDialog(context, (XFile file) async {
-            log('From "ProfileImageWidget" Selected file path: ${file.path}');
-            context.read<ProfileImageCubit>().updateProfileImage(
-              userId: sl<FirebaseAuth>().currentUser!.uid,
-              imageFile: file,
-            );
-          });
+          _showImageSourceDialog(
+            context: context,
+            selectedFile: (XFile file) async {
+              log('From "ProfileImageWidget" Selected file path: ${file.path}');
+              context.read<ProfileImageCubit>().updateProfileImage(
+                userId: sl<FirebaseAuth>().currentUser!.uid,
+                imageFile: file,
+              );
+            },
+          );
         },
         child: Container(
           width: 90,
