@@ -3,21 +3,27 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_media_app/core/constants/firestore_constants.dart';
 import 'package:social_media_app/features/profile/data/data_source/image_remote_data_source.dart';
+import 'package:social_media_app/features/profile/data/data_source/personal_info_remote_data_source.dart';
 import 'package:social_media_app/features/profile/domain/repository/profile_repository.dart';
 
 class ProfileRepositoryImpl implements ProfileRepositoryBase {
   final ImageRemoteDataSourceBase imageRemoteDataSource;
   final FirebaseFirestore firestore;
+  final PersonalInfoRemoteDataSource personalInfoRemoteDataSource;
 
   ProfileRepositoryImpl({
     required this.imageRemoteDataSource,
     required this.firestore,
+    required this.personalInfoRemoteDataSource,
   });
 
   @override
-  Future<String> getProfileImageUrl({required String userId}) async {
-    // This method is not implemented yet
-    throw UnimplementedError();
+  Future<String?> getProfileImageUrl({required String userId}) async {
+    final userSnapshot = await firestore
+        .collection(FirestoreConstants.usersCollection)
+        .doc(userId)
+        .get();
+    return userSnapshot.data()?[FirestoreConstants.userFields.profileImageUrl];
   }
 
   @override
@@ -59,7 +65,20 @@ class ProfileRepositoryImpl implements ProfileRepositoryBase {
     }
     // Commit batch
     await batch.commit();
-    
+
     return uploadedImageUrl;
+  }
+
+  @override
+  Future<void> updatePersonalInfo({
+    required String userId,
+    required String name,
+    required String bio,
+  }) async {
+    return personalInfoRemoteDataSource.updatePersonalInfo(
+      userId: userId,
+      name: name,
+      bio: bio,
+    );
   }
 }

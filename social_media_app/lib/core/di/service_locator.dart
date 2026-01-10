@@ -15,43 +15,87 @@ import 'package:social_media_app/features/posts/domain/use_cases/add_post_use_ca
 import 'package:social_media_app/features/posts/domain/use_cases/delete_post_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/get_posts_stream_use_case.dart';
 import 'package:social_media_app/features/posts/domain/use_cases/update_post_use_case.dart';
+import 'package:social_media_app/features/profile/data/data_source/firestore_personal_info_remote_data_source.dart';
 import 'package:social_media_app/features/profile/data/data_source/image_remote_data_source.dart';
+import 'package:social_media_app/features/profile/data/data_source/personal_info_remote_data_source.dart';
 import 'package:social_media_app/features/profile/data/data_source/supabase_image_remote_data_source_impl.dart';
 import 'package:social_media_app/features/profile/data/repository/profile_repository_impl.dart';
 import 'package:social_media_app/features/profile/domain/repository/profile_repository.dart';
+import 'package:social_media_app/features/profile/domain/use_cases/update_personal_info_use_case.dart';
 import 'package:social_media_app/features/profile/domain/use_cases/update_profile_image_use_case.dart';
+import 'package:social_media_app/features/profile/presentation/cubits/personal_info_cubit/personal_info_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/cubits/profile_image_cubit/profile_image_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
 
-Future<void> initDependencies() async{
+Future<void> initDependencies() async {
   sl.registerSingleton(FirebaseAuth.instance);
   sl.registerSingleton(FirebaseFirestore.instance);
-  sl.registerLazySingleton<SupabaseClient>(()=>Supabase.instance.client);
+  sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
-  sl.registerLazySingleton<AuthRemoteDataSource>(()=>AuthRemoteDataSource());
-  sl.registerLazySingleton<PostsDataSource>(()=>PostsDataSource(auth: sl(), fireStore: sl()));
-  sl.registerLazySingleton<ImageRemoteDataSourceBase>(()=>SupabaseImageRemoteDataSourceImpl(supabase: sl<SupabaseClient>()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource());
+  sl.registerLazySingleton<PostsDataSource>(
+    () => PostsDataSource(auth: sl(), fireStore: sl()),
+  );
+  sl.registerLazySingleton<ImageRemoteDataSourceBase>(
+    () => SupabaseImageRemoteDataSourceImpl(supabase: sl<SupabaseClient>()),
+  );
+  sl.registerLazySingleton<PersonalInfoRemoteDataSource>(
+    () => FirestorePersonalInfoRemoteDataSource(
+      firestore: sl<FirebaseFirestore>(),
+    ),
+  );
 
-  sl.registerLazySingleton<AuthRepoBase>(()=>AuthRepoImpl(remoteDataSource: sl<AuthRemoteDataSource>()));
-  sl.registerLazySingleton<PostsRepoBase>(()=>PostsRepoImpl(postsDataSource: sl<PostsDataSource>()));
-  sl.registerLazySingleton<ProfileRepositoryBase>(()=>ProfileRepositoryImpl(
-    imageRemoteDataSource: sl<ImageRemoteDataSourceBase>(),
-    firestore: sl<FirebaseFirestore>(),
-  ));
+  sl.registerLazySingleton<AuthRepoBase>(
+    () => AuthRepoImpl(remoteDataSource: sl<AuthRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<PostsRepoBase>(
+    () => PostsRepoImpl(postsDataSource: sl<PostsDataSource>()),
+  );
+  sl.registerLazySingleton<ProfileRepositoryBase>(
+    () => ProfileRepositoryImpl(
+      imageRemoteDataSource: sl<ImageRemoteDataSourceBase>(),
+      personalInfoRemoteDataSource: sl<PersonalInfoRemoteDataSource>(),
+      firestore: sl<FirebaseFirestore>(),
+    ),
+  );
 
-  sl.registerLazySingleton(()=>RegisterUseCase(authRepo: sl<AuthRepoBase>()));
-  sl.registerLazySingleton(()=>LogInUseCase(authRepo: sl<AuthRepoBase>()));
-  sl.registerLazySingleton(()=>LogOutUseCase(authRepo: sl<AuthRepoBase>()));
-  sl.registerLazySingleton(()=>ResetPasswordUsecase(authRepo: sl<AuthRepoBase>()));
+  sl.registerLazySingleton(() => RegisterUseCase(authRepo: sl<AuthRepoBase>()));
+  sl.registerLazySingleton(() => LogInUseCase(authRepo: sl<AuthRepoBase>()));
+  sl.registerLazySingleton(() => LogOutUseCase(authRepo: sl<AuthRepoBase>()));
+  sl.registerLazySingleton(
+    () => ResetPasswordUsecase(authRepo: sl<AuthRepoBase>()),
+  );
 
-  sl.registerLazySingleton(()=>AddPostUseCase(postsRepo: sl<PostsRepoBase>()));
-  sl.registerLazySingleton(()=>GetPostsStreamUseCase(postsRepo: sl<PostsRepoBase>()));
-  sl.registerLazySingleton(()=>DeletePostUseCase(postRepo:sl<PostsRepoBase>()));
-  sl.registerLazySingleton(()=>UpdatePostUseCase(postRepo: sl<PostsRepoBase>()));
+  sl.registerLazySingleton(
+    () => AddPostUseCase(postsRepo: sl<PostsRepoBase>()),
+  );
+  sl.registerLazySingleton(
+    () => GetPostsStreamUseCase(postsRepo: sl<PostsRepoBase>()),
+  );
+  sl.registerLazySingleton(
+    () => DeletePostUseCase(postRepo: sl<PostsRepoBase>()),
+  );
+  sl.registerLazySingleton(
+    () => UpdatePostUseCase(postRepo: sl<PostsRepoBase>()),
+  );
 
-  sl.registerLazySingleton(()=>UpdateProfileImageUseCase(repository: sl<ProfileRepositoryBase>()));
+  sl.registerLazySingleton(
+    () => UpdateProfileImageUseCase(repository: sl<ProfileRepositoryBase>()),
+  );
 
-  sl.registerFactory<ProfileImageCubit>(()=>ProfileImageCubit(sl<UpdateProfileImageUseCase>()));
+  sl.registerLazySingleton(
+    () => UpdatePersonalInfoUseCase(repository: sl<ProfileRepositoryBase>()),
+  );
+
+  sl.registerFactory<ProfileImageCubit>(
+    () => ProfileImageCubit(sl<UpdateProfileImageUseCase>()),
+  );
+
+  sl.registerFactory<PersonalInfoCubit>(
+    () => PersonalInfoCubit(
+      updatePersonalInfoUseCase: sl<UpdatePersonalInfoUseCase>(),
+    ),
+  );
 }

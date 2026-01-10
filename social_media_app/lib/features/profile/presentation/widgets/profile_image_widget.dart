@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,18 +8,18 @@ import 'package:social_media_app/features/profile/presentation/cubits/profile_im
 import 'package:social_media_app/features/profile/presentation/cubits/profile_image_cubit/profile_image_state.dart';
 
 class ProfileImageWidget extends StatelessWidget {
-  ProfileImageWidget({super.key, required this.imageUrl});
-  String? imageUrl;
+  const ProfileImageWidget({super.key, required this.imageUrl});
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileImageCubit, ProfileImageState>(
       builder: (context, state) {
-        log('From "ProfileImageWidget" Current ProfileImageState: $state');
+        //log('From "ProfileImageWidget" Current ProfileImageState: $state');
         if (state is ProfileImageFailure) {
-          log(
-            'From "ProfileImageWidget" Profile image update failed: ${state.errorMessage}',
-          );
+          // log(
+          //   'From "ProfileImageWidget" Profile image update failed: ${state.errorMessage}',
+          // );
           ToastService.showToast(
             'Profile image update failed: ${state.errorMessage}',
           );
@@ -112,7 +110,7 @@ class PickImageIconWidget extends StatelessWidget {
           _showImageSourceDialog(
             context: context,
             selectedFile: (XFile file) async {
-              log('From "ProfileImageWidget" Selected file path: ${file.path}');
+              //log('From "ProfileImageWidget" Selected file path: ${file.path}');
               context.read<ProfileImageCubit>().updateProfileImage(
                 userId: sl<FirebaseAuth>().currentUser!.uid,
                 imageFile: file,

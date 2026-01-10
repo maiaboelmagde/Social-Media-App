@@ -25,14 +25,20 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       //TODO: Replace with actual user image URL
-                      ProfileImageWidget(imageUrl: 'https://www.shutterstock.com/image-vector/no-image-available-icon-flat-260nw-1240855801.jpg',),
+                      ProfileImageWidget(
+                        imageUrl:
+                            'https://www.shutterstock.com/image-vector/no-image-available-icon-flat-260nw-1240855801.jpg',
+                      ),
                       SizedBox(height: 8),
                     ],
                   ),
                 ),
               ),
-          
-              Text('Profile Info',style: Theme.of(context).textTheme.displayMedium),
+
+              Text(
+                'Profile Info',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
               ListTile(
                 leading: Icon(Icons.person_2_outlined),
                 title: Text('Personal Info'),
@@ -60,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
                       ThemeController.toggleTheme();
                     },
                   );
-                }
+                },
               ),
               Divider(),
               ListTile(
@@ -72,7 +78,6 @@ class ProfileScreen extends StatelessWidget {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => SignInScreen()),
                   );
-          
                 },
               ),
             ],
